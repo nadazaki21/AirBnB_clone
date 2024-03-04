@@ -5,10 +5,18 @@ from datetime import datetime
 
 class BaseModel():
     """ Base model class """
-    def __init__(self):
-        self.id  = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+    def __init__(self, *args, **kwargs):
+        if kwargs != {}:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    setattr(self, key, datetime(value))
+                else:
+                    setattr(self, key, value)
+        else:
+            self.id  = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+
     def __str__(self):
         class_name = self.__class__.__name__
         return ("[{}] ({}) {}".format(self.__class__.__name__, self.id , self.__dict__))
@@ -17,6 +25,16 @@ class BaseModel():
         self.updated_at = datetime.now()
     
     def to_dict(self):
-        return {'id': self.id, 'created_at': self.created_at.isoformat(), 'updated_at': self.updated_at.isoformat()}
+        # Get all instance attributes
+        obj_dict = self.__dict__.copy()  #copy is used to create a copy, without it we'd create a refrence
+
+        # Add __class__ attribute
+        obj_dict['__class__'] = self.__class__.__name__
+
+        # Convert created_at and updated_at to ISO format strings
+        obj_dict['created_at'] = self.created_at.isoformat()
+        obj_dict['updated_at'] = self.updated_at.isoformat()
+
+        return obj_dict
     
     
