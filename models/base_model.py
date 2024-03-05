@@ -2,6 +2,7 @@
 """ this module in the Base model class module """
 from uuid import uuid4
 from datetime import datetime
+import models
 
 
 class BaseModel():
@@ -32,6 +33,7 @@ class BaseModel():
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """Return the string representation of the class"""
@@ -46,6 +48,7 @@ class BaseModel():
         """
 
         self.updated_at = datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         # Get all instance attributes
