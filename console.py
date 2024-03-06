@@ -3,6 +3,12 @@
 import cmd
 from models import storage
 from models.base_model import BaseModel
+from models.city import City
+from models.state import State
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
+from models.user import User
 from shlex import split
 
 
@@ -24,23 +30,25 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, argv):
         """Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id"""
-        if argv == ("",):
+        arguments = argv.split()
+        if argv == "":
             self.stdout.write("** class name missing **\n")
-        elif argv[0] not in ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]:
+        elif arguments[0] not in ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]:
             self.stdout.write("** class doesn't exist **\n")
         else:
-            new_obj = eval(argv[0] + "()")
+            
+            new_obj = eval(arguments[0] + "()")
             storage.new(new_obj)
             storage.save()
-            self.stdout.write(f"{argv[0]}.{new_obj.id}\n")
+            self.stdout.write(f"{arguments[0]}.{new_obj.id}\n")
 
     def do_show(self, argv):
         """Prints the string representation of an instance based on the class name and id"""
         all_class_objs = storage.all()
-        if argv == ("",):
+        if argv == "":
             self.stdout.write("** class name missing **\n")
         else:
-            arguments = argv[0].split()
+            arguments = argv.split()
 
             if arguments[0] not in ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]:
                 self.stdout.write("** class doesn't exist **\n")
@@ -59,21 +67,23 @@ class HBNBCommand(cmd.Cmd):
         """Prints all string representation of all instances based or not on the class name. Ex: $ all BaseModel or $ all."""
         obj_list = []
         all_class_objs = storage.all()
-        if class_name == ("",):
+        if class_name == "":
             for key, value in all_class_objs.items():
                 obj_list.append(str(value))
-        elif class_name[0] not in ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]:
+                print(obj_list)
+        elif class_name not in ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]:
             self.stdout.write("** class doesn't exist **\n")
         else:  # a name of a class that exists is given
             for key, value in all_class_objs.items():
                 class_name_with_id = key.split(".")
-                if class_name_with_id[0] == class_name[0]:
+                if class_name_with_id[0] == class_name:
                     obj_list.append(str(value))
-        print(obj_list)
+            print(obj_list)
+        
 
     def do_destroy(self, argv):
         """Deletes an instance based on the class name and id"""
-        arguments = split(argv[0])
+        arguments = split(argv)
         all_class_objs = storage.all()
 
         if len(arguments) < 1:
@@ -94,7 +104,7 @@ class HBNBCommand(cmd.Cmd):
         only one sttaribute can be chanes at a time
         """
 
-        arguments = split(argv[0])  # shlex function to take care of "" when taking argv
+        arguments = split(argv)  # shlex function to take care of "" when taking argv
         argv_num = len(arguments)
         all_objs = storage.all()
 

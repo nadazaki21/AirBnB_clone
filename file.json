@@ -30,5 +30,11 @@
         "email": "airbnb2@mail.com",
         "password": "root",
         "__class__": "User"
+    },
+    "User.ccee5f9c-09d2-4bb8-b71f-7d96e235e170": {
+        "id": "ccee5f9c-09d2-4bb8-b71f-7d96e235e170",
+        "created_at": "2024-03-06T22:33:58.553025",
+        "updated_at": "2024-03-06T22:33:58.553045",
+        "__class__": "User"
     }
 }
