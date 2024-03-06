@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """This module contains FileStorage class"""
 import json
-from models.base_model import BaseModel
-from models.user import User
+
 
 
 class FileStorage:
@@ -49,7 +48,8 @@ class FileStorage:
         (only if the JSON file (__file_path) exists, otherwise, do nothing.
         If the file doesn’t exist, no exception should be raised)
         """
-
+        from models.base_model import BaseModel
+        from models.user import User
         try:
             with open(FileStorage.__file_path, "r") as file:
                 deserialized_objects = json.load(file)

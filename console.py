@@ -26,8 +26,7 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id"""
         if argv == ("",):
             self.stdout.write("** class name missing **\n")
-        elif argv[0] not in ["BaseModel"]:
-            # print(argv)
+        elif argv[0] not in ["BaseModel", "User"]:
             self.stdout.write("** class doesn't exist **\n")
         else:
             new_obj = eval(argv[0] + "()")
@@ -42,9 +41,9 @@ class HBNBCommand(cmd.Cmd):
         else:
             arguments = argv[0].split()
 
-            if arguments[0] not in ["BaseModel"]:
+            if arguments[0] not in ["BaseModel", "User"]:
                 self.stdout.write("** class doesn't exist **\n")
-            elif arguments[0] in ["BaseModel"] and len(arguments) < 2:
+            elif arguments[0] in ["BaseModel", "User"] and len(arguments) < 2:
                 self.stdout.write("** instance id missing **\n")
             else:
                 # storage.reload() #not needed as reload already ahppens in init.
@@ -59,7 +58,7 @@ class HBNBCommand(cmd.Cmd):
         if class_name == ("",):
             for key, value in all_class_objs.items():
                 print(value)
-        elif class_name[0] not in ["BaseModel"]:
+        elif class_name[0] not in ["BaseModel", "User"]:
             # print(class_name)
             self.stdout.write("** class doesn't exist **\n")
         else:  # a name of a class that exists is given
@@ -75,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
 
         if len(arguments) < 1:
             self.stdout.write("** class name missing **\n")
-        elif arguments[0] not in ["BaseModel"]:
+        elif arguments[0] not in ["BaseModel", "User"]:
             self.stdout.write("** class doesn't exist **\n")
         elif len(arguments) < 2:
             self.stdout.write("** instance id missing **\n")
@@ -98,7 +97,7 @@ class HBNBCommand(cmd.Cmd):
 
         if argv_num < 1:
             self.stdout.write("** class name missing **\n")
-        elif arguments[0] not in ["BaseModel"]:
+        elif arguments[0] not in ["BaseModel", "User"]:
             self.stdout.write("** class doesn't exist **\n")
         elif argv_num < 2:
             self.stdout.write("** instance id missing **\n")
