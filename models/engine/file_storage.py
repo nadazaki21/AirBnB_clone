@@ -3,7 +3,6 @@
 import json
 
 
-
 class FileStorage:
     """
     This class is for serializing instances to a JSON file
@@ -50,6 +49,7 @@ class FileStorage:
         """
         from models.base_model import BaseModel
         from models.user import User
+
         try:
             with open(FileStorage.__file_path, "r") as file:
                 deserialized_objects = json.load(file)

@@ -5,8 +5,8 @@ from datetime import datetime
 from models import storage
 
 
-class BaseModel():
-    """ Base model class """
+class BaseModel:
+    """Base model class"""
 
     def __init__(self, *args, **kwargs):
         """
@@ -25,8 +25,7 @@ class BaseModel():
                 if key == "__class__":
                     continue
                 elif key == "created_at" or key == "updated_at":
-                    setattr(self, key,
-                            datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
+                    setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
                 else:
                     setattr(self, key, value)
         else:
@@ -39,7 +38,7 @@ class BaseModel():
         """Return the string representation of the class"""
 
         class_name = self.__class__.__name__
-        return ("[{}] ({}) {}".format(class_name, self.id, self.__dict__))
+        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
 
     def save(self):
         """
@@ -56,10 +55,10 @@ class BaseModel():
         obj_dict = self.__dict__.copy()
 
         # Add __class__ attribute
-        obj_dict['__class__'] = self.__class__.__name__
+        obj_dict["__class__"] = self.__class__.__name__
 
         # Convert created_at and updated_at to ISO format strings
-        obj_dict['created_at'] = self.created_at.isoformat()
-        obj_dict['updated_at'] = self.updated_at.isoformat()
+        obj_dict["created_at"] = self.created_at.isoformat()
+        obj_dict["updated_at"] = self.updated_at.isoformat()
 
         return obj_dict
