@@ -50,23 +50,22 @@ class HBNBCommand(cmd.Cmd):
 
         commands = {
             "all": self.do_all,
-            "count": self.do_count
+            "count": self.do_count,
+            "show": self.do_show
             }
         splitted_line = line.split(".")
 
         class_name = splitted_line[0]
 
-        if class_name in HBNBCommand.__classes:
+        command = splitted_line[1].split("(")[0]
+        if command in commands:
+            match = re.search(r"(\(.*\))", splitted_line[1])
+            if match is not None:
+                arg = match.group()[1:-1]
+                new_line = f"{class_name} {arg}"
+                return commands[command](new_line.strip())
 
-            command = splitted_line[1].split("(")[0]
-            if command in commands:
-                match = re.search(r"(\(.*\))", splitted_line[1])
-                if match is not None:
-                    arg = match.group()[1:-1]
-                    new_line = f"{class_name} {arg}"
-                    return commands[command](new_line.strip())
-
-        print("*** Unknown syntax: {}".format(line))
+        print(f"*** Unknown syntax: {line}")
         return False
 
     def do_create(self, argv):
