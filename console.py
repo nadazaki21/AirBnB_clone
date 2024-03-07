@@ -48,7 +48,10 @@ class HBNBCommand(cmd.Cmd):
             line (str): Is the line to look through
         """
 
-        commands = {"all": self.do_all}
+        commands = {
+            "all": self.do_all,
+            "count": self.do_count
+            }
         splitted_line = line.split(".")
 
         class_name = splitted_line[0]
@@ -72,7 +75,7 @@ class HBNBCommand(cmd.Cmd):
         saves it (to the JSON file) and prints the id. Ex: ($ create BaseModel)
 
         Args:
-            args (str): The arguments passed to the command
+            argv (str): The arguments passed to the command
         """
 
         arguments = split(argv)
@@ -91,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
         based on the class name and id. Ex: $ show BaseModel 1234-1234-1234.
 
         Args:
-            args (str): The arguments passed to the command
+            argv (str): The arguments passed to the command
         """
 
         models.storage.reload()
@@ -149,7 +152,7 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ destroy BaseModel 1234-1234-1234.
 
         Args:
-            args (str): The arguments passed to the command
+            argv (str): The arguments passed to the command
         """
 
         arguments = split(argv)
@@ -176,7 +179,7 @@ class HBNBCommand(cmd.Cmd):
         Usage: update <class name> <id> <attribute name> '<attribute value>'
 
         Args:
-            args (str): The arguments passed to the command
+            argv (str): The arguments passed to the command
         """
         # shlex function to take care of "" when taking argv
         arguments = split(argv)
@@ -200,6 +203,33 @@ class HBNBCommand(cmd.Cmd):
             obj = all_objs[f"{arguments[0]}.{arguments[1]}"]
             setattr(obj, arguments[2], arguments[3])
             models.storage.save()
+
+    def do_count(self, args):
+        """
+        Retrieves the number of instances of a class: <class name>.count().
+
+        Args:
+            args (str): The arguments passed to the command
+        """
+        count = 0
+        cls_name = ""
+
+        if args:
+            args = split(args)
+            cls_name = args[0]
+
+        if cls_name:
+            if cls_name in HBNBCommand.__classes:
+                models.storage.reload()
+                objects = models.storage.all()
+                for value in objects.values():
+                    if cls_name == value.__class__.__name__:
+                        count += 1
+                print(count)
+            else:
+                print("** class doesn't exist **")
+        else:
+            print("** class name missing **")
 
 
 if __name__ == "__main__":
