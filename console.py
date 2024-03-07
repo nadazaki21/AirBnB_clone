@@ -38,11 +38,6 @@ class HBNBCommand(cmd.Cmd):
         """Returns an empty string if no command is entered"""
         pass
 
-    def precmd(self, line: str):
-        """Excutes before each command"""
-        line = line.replace(",", "")
-        return super().precmd(line)
-
     def default(self, line: str) -> None:
         """
         Called on an input line when the command prefix is not recognized
@@ -60,17 +55,18 @@ class HBNBCommand(cmd.Cmd):
             "destroy": self.do_destroy,
             "update": self.do_update
             }
-        splitted_line = line.split(".")
+        splitted_line = line.split(".", 1)
 
         class_name = splitted_line[0]
 
-        command = splitted_line[1].split("(")[0]
-        if command in commands:
-            match = re.search(r"(\(.*\))", splitted_line[1])
-            if match is not None:
-                arg = match.group()[1:-1]
-                new_line = f"{class_name} {arg}"
-                return commands[command](new_line.strip())
+        if len(splitted_line) > 1:
+            command = splitted_line[1].split("(")[0]
+            if command in commands:
+                match = re.search(r"(\(.*\))", splitted_line[1])
+                if match is not None:
+                    arg = match.group()[1:-1]
+                    new_line = f"{class_name} {arg}"
+                    return commands[command](new_line.strip())
 
         print(f"*** Unknown syntax: {line}")
         return False
@@ -188,7 +184,7 @@ class HBNBCommand(cmd.Cmd):
             argv (str): The arguments passed to the command
         """
         # shlex function to take care of "" when taking argv
-        arguments = split(argv)
+        arguments = self.check_for_dict(argv)
         argv_num = len(arguments)
         models.storage.reload()
         all_objs = models.storage.all()
@@ -204,10 +200,30 @@ class HBNBCommand(cmd.Cmd):
         elif argv_num < 3:
             print("** attribute name missing **")
         elif argv_num < 4:
+
+            if type(arguments[2]) is dict:
+                obj_key = f"{arguments[0]}.{arguments[1]}"
+                obj = all_objs[obj_key]
+
+                for key, value in arguments[2].items():
+                    if key in obj.__dict__:
+                        value_type = type(obj.__dict__[key])
+                        value = value_type(value)
+                    obj.__dict__[key] = value
+                models.storage.save()
+                return False
+
             print("** value missing **")
         else:
             obj = all_objs[f"{arguments[0]}.{arguments[1]}"]
-            setattr(obj, arguments[2], arguments[3])
+            attr_name = arguments[2]
+            attr_value = arguments[3]
+
+            if arguments[2] in obj.__dict__:
+                value_type = type(obj.__dict__[attr_name])
+                attr_value = value_type(attr_value)
+
+            obj.__dict__[arguments[2]] = attr_value
             models.storage.save()
 
     def do_count(self, args):
@@ -236,6 +252,27 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
         else:
             print("** class name missing **")
+
+    def check_for_dict(self, line):
+        """
+        Checks if the line has a dict representation and return a list of args
+        Args:
+            line (str): Is the line to check
+        """
+
+        args = []
+
+        dictionary = re.search(r"(\{.*\})", line)
+
+        if dictionary:
+            line = line[:dictionary.span()[0]]
+            line = line.replace(",", "")
+            args = [arg for arg in split(line)]
+            args.append(eval(dictionary.group()))
+            return args
+        else:
+            line = line.replace(",", "")
+            return [arg for arg in split(line)]
 
 
 if __name__ == "__main__":
