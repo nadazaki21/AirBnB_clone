@@ -51,7 +51,8 @@ class HBNBCommand(cmd.Cmd):
         commands = {
             "all": self.do_all,
             "count": self.do_count,
-            "show": self.do_show
+            "show": self.do_show,
+            "destroy": self.do_destroy
             }
         splitted_line = line.split(".")
 
