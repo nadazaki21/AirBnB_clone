@@ -38,6 +38,11 @@ class HBNBCommand(cmd.Cmd):
         """Returns an empty string if no command is entered"""
         pass
 
+    def precmd(self, line: str):
+        """Excutes before each command"""
+        line = line.replace(",", "")
+        return super().precmd(line)
+
     def default(self, line: str) -> None:
         """
         Called on an input line when the command prefix is not recognized
@@ -52,7 +57,8 @@ class HBNBCommand(cmd.Cmd):
             "all": self.do_all,
             "count": self.do_count,
             "show": self.do_show,
-            "destroy": self.do_destroy
+            "destroy": self.do_destroy,
+            "update": self.do_update
             }
         splitted_line = line.split(".")
 
