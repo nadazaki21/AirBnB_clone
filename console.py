@@ -206,8 +206,8 @@ class HBNBCommand(cmd.Cmd):
                 obj = all_objs[obj_key]
 
                 for key, value in arguments[2].items():
-                    if key in obj.__dict__:
-                        value_type = type(obj.__dict__[key])
+                    if key in obj.__class__.__dict__:
+                        value_type = type(obj.__class__.__dict__[key])
                         value = value_type(value)
                     obj.__dict__[key] = value
                 models.storage.save()
@@ -219,8 +219,8 @@ class HBNBCommand(cmd.Cmd):
             attr_name = arguments[2]
             attr_value = arguments[3]
 
-            if arguments[2] in obj.__dict__:
-                value_type = type(obj.__dict__[attr_name])
+            if arguments[2] in obj.__class__.__dict__:
+                value_type = type(obj.__class__.__dict__[attr_name])
                 attr_value = value_type(attr_value)
 
             obj.__dict__[arguments[2]] = attr_value
@@ -240,18 +240,13 @@ class HBNBCommand(cmd.Cmd):
             args = split(args)
             cls_name = args[0]
 
-        if cls_name:
-            if cls_name in HBNBCommand.__classes:
-                models.storage.reload()
-                objects = models.storage.all()
-                for value in objects.values():
-                    if cls_name == value.__class__.__name__:
-                        count += 1
-                print(count)
-            else:
-                print("** class doesn't exist **")
-        else:
-            print("** class name missing **")
+        models.storage.reload()
+        objects = models.storage.all()
+        for value in objects.values():
+            if cls_name == value.__class__.__name__:
+                count += 1
+
+        print(count)
 
     def check_for_dict(self, line):
         """
