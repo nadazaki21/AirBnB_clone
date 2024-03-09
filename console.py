@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+"""This module contains HBNBCommand class"""
+
 import cmd
 import models
 from models.base_model import BaseModel
@@ -14,6 +16,11 @@ import re
 
 
 class HBNBCommand(cmd.Cmd):
+    """
+    Tests the functionality of the project through terminal
+    using cmd.Cmd class as super class
+    """
+
     prompt = "(hbnb) "
     __classes = [
         "BaseModel",
