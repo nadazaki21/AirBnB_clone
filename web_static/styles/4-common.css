@@ -3,7 +3,7 @@ body{
     padding: 0px;
     font-size: 14px;
     font-family: Arial;
-    
+
 }
 
 hr{
@@ -12,4 +12,10 @@ hr{
     background-color: #CCCCCC;
     width: 100%;
     
+}
+
+div.container{
+    width: 50%;
+    max-width: 1000px;
+    margin: 30px auto ;
 }
